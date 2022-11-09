@@ -28,37 +28,61 @@ const images = [
   },
 ];
 
-
-const mainImgTemplate = document.getElementById("carousel-main_img").content;
-const miniatureTemplate = document.getElementById("miniature_img").content;
-const mainDestination = document.querySelector(".col-9");
-const miniatureDestination = document.querySelector(".col-3");
-
-function carouselImages() {
+//Riempie il carosello con le immagini dell'array
+function carouselImages(main_template, main_destination, miniature_template, miniature_destination) {
   for (let i = 0; i < images.length; i++) {
     const element = images[i];
-    const mainImg = mainImgTemplate.cloneNode(true);
-    const miniatureImg = miniatureTemplate.cloneNode(true);
-    mainImg.querySelector("img").src = element.image;
-    mainImg.querySelector(".title").innerHTML = element.title;
-    mainImg.querySelector(".text").innerHTML = element.text;
-    miniatureImg.querySelector("img").src = element.image;
+    const mainImgCreate = main_template.cloneNode(true);
+    const miniatureImgCreate = miniature_template.cloneNode(true);
+    mainImgCreate.querySelector("img").src = element.image;
+    mainImgCreate.querySelector(".title").innerHTML = element.title;
+    mainImgCreate.querySelector(".text").innerHTML = element.text;
+    miniatureImgCreate.querySelector("img").src = element.image;
     if (i !== 0) {
-      mainImg.querySelector("img").classList.add("hidden");
-      mainImg.querySelector(".image-text").classList.add("hidden");
-      miniatureImg.querySelector(".row").classList.add("inactive");
+      mainImgCreate.querySelector("img").classList.add("hidden");
+      mainImgCreate.querySelector(".image-text").classList.add("hidden");
+      miniatureImgCreate.querySelector(".row").classList.add("inactive");
     }
-    mainDestination.append(mainImg);
-    miniatureDestination.append(miniatureImg);
+    main_destination.append(mainImgCreate);
+    miniature_destination.append(miniatureImgCreate);
+  }
+}
+// Aggiunge listener su click delle miniature
+function addMiniatureListener(miniature_imgArray, main_imgArray, main_textArray) {
+  for (let i = 0; i < images.length; i++) {
+    miniature_imgArray[i].addEventListener("click", function(){
+      if(miniature_imgArray[i].classList.contains("inactive")) {
+        main_imgArray[activeNow].classList.add("hidden");
+        main_textArray[activeNow].classList.add("hidden");
+        miniature_imgArray[activeNow].classList.add("inactive")
+        activeNow = i ;
+        main_imgArray[activeNow].classList.remove("hidden");
+        main_textArray[activeNow].classList.remove("hidden");
+        miniature_imgArray[activeNow].classList.remove("inactive")
+      }
+    })    
   }
 }
 
-carouselImages();
+// Template immagine grande + destinazione
+const mainImgTemplate = document.getElementById("carousel-main_img").content;
+const mainDestination = document.querySelector(".col-9");
+// Template immagini piccole + destinazione
+const miniatureTemplate = document.getElementById("miniature_img").content;
+const miniatureDestination = document.querySelector(".col-3");
 
+carouselImages(mainImgTemplate, mainDestination, miniatureTemplate, miniatureDestination);
+
+// Array immagini grandi e relativo testo
 const mainImg = document.querySelectorAll(".col-9 img");
 const mainText = document.querySelectorAll(".image-text");
+// Array immagini piccole
 const miniatureImg = document.querySelectorAll(".row");
+// Inizializzazione indice immagine attiva
 let activeNow = 0;
+
+addMiniatureListener(miniatureImg, mainImg, mainText);
+
 // Pulsanti previous e next
 const nextBtn = document.querySelector(".next i");
 const prevBtn = document.querySelector(".previous i");
@@ -90,20 +114,4 @@ prevBtn.addEventListener("click", function(){
   miniatureImg[activeNow].classList.remove("inactive")
 })
 
-function addMiniatureListener() {
-  for (let i = 0; i < images.length; i++) {
-    miniatureImg[i].addEventListener("click", function(){
-      if(miniatureImg[i].classList.contains("inactive")) {
-        console.log(i);
-        mainImg[activeNow].classList.add("hidden");
-        mainText[activeNow].classList.add("hidden");
-        miniatureImg[activeNow].classList.add("inactive")
-        activeNow = i ;
-        mainImg[activeNow].classList.remove("hidden");
-        mainText[activeNow].classList.remove("hidden");
-        miniatureImg[activeNow].classList.remove("inactive")
-      }
-    })    
-  }
-}
-addMiniatureListener();
+

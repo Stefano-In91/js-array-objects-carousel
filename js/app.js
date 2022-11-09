@@ -47,7 +47,7 @@ function carouselImages() {
       mainImg.querySelector("img").classList.add("hidden");
       mainImg.querySelector(".image-text").classList.add("hidden");
       miniatureImg.querySelector(".row").classList.add("inactive");
-    }    
+    }
     mainDestination.append(mainImg);
     miniatureDestination.append(miniatureImg);
   }
@@ -89,3 +89,21 @@ prevBtn.addEventListener("click", function(){
   mainText[activeNow].classList.remove("hidden");
   miniatureImg[activeNow].classList.remove("inactive")
 })
+
+function addMiniatureListener() {
+  for (let i = 0; i < images.length; i++) {
+    miniatureImg[i].addEventListener("click", function(){
+      if(miniatureImg[i].classList.contains("inactive")) {
+        console.log(i);
+        mainImg[activeNow].classList.add("hidden");
+        mainText[activeNow].classList.add("hidden");
+        miniatureImg[activeNow].classList.add("inactive")
+        activeNow = i ;
+        mainImg[activeNow].classList.remove("hidden");
+        mainText[activeNow].classList.remove("hidden");
+        miniatureImg[activeNow].classList.remove("inactive")
+      }
+    })    
+  }
+}
+addMiniatureListener();

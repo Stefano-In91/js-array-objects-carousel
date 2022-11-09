@@ -63,7 +63,40 @@ function addMiniatureListener(miniature_imgArray, main_imgArray, main_textArray)
     })    
   }
 }
-
+//  Swap dell'attuale attivo col prossimo
+function swapOnward(main_imgArray, main_textArray, miniature_imgArray) {
+  main_imgArray[activeNow].classList.add("hidden");
+  main_textArray[activeNow].classList.add("hidden");
+  miniature_imgArray[activeNow].classList.add("inactive")
+  if (activeNow < images.length - 1) {
+    activeNow++;
+  } else {
+      activeNow = 0;
+  }
+  main_imgArray[activeNow].classList.remove("hidden");
+  main_textArray[activeNow].classList.remove("hidden");
+  miniature_imgArray[activeNow].classList.remove("inactive")
+}
+// Swap dell'attuale attivo col precedente
+function swapBackward(main_imgArray, main_textArray, miniature_imgArray) {
+  main_imgArray[activeNow].classList.add("hidden");
+  main_textArray[activeNow].classList.add("hidden");
+  miniature_imgArray[activeNow].classList.add("inactive")
+  if (activeNow > 0){
+    activeNow--;
+  } else {
+    activeNow = images.length - 1;
+  }
+  main_imgArray[activeNow].classList.remove("hidden");
+  main_textArray[activeNow].classList.remove("hidden");
+  miniature_imgArray[activeNow].classList.remove("inactive")
+}
+// Funzione autoplay
+function autoplay(main_imgArray, main_textArray, miniature_imgArray) {
+  setInterval(function() {
+    swapBackward(main_imgArray, main_textArray, miniature_imgArray)
+  }, 3000);
+}
 // Template immagine grande + destinazione
 const mainImgTemplate = document.getElementById("carousel-main_img").content;
 const mainDestination = document.querySelector(".col-9");
@@ -88,30 +121,9 @@ const nextBtn = document.querySelector(".next i");
 const prevBtn = document.querySelector(".previous i");
 // Event Listener su click
 nextBtn.addEventListener("click", function(){
-  mainImg[activeNow].classList.add("hidden");
-  mainText[activeNow].classList.add("hidden");
-  miniatureImg[activeNow].classList.add("inactive")
-  if (activeNow < images.length - 1) {
-      activeNow++;
-  } else {
-      activeNow = 0;
-  }  
-  mainImg[activeNow].classList.remove("hidden");
-  mainText[activeNow].classList.remove("hidden");
-  miniatureImg[activeNow].classList.remove("inactive")
+  swapOnward(mainImg, mainText, miniatureImg);
 })
 prevBtn.addEventListener("click", function(){
-  mainImg[activeNow].classList.add("hidden");
-  mainText[activeNow].classList.add("hidden");
-  miniatureImg[activeNow].classList.add("inactive")
-  if (activeNow > 0){
-      activeNow--;
-  } else {
-      activeNow = images.length - 1;
-  }
-  mainImg[activeNow].classList.remove("hidden");
-  mainText[activeNow].classList.remove("hidden");
-  miniatureImg[activeNow].classList.remove("inactive")
+  swapBackward(mainImg, mainText, miniatureImg);
 })
-
 

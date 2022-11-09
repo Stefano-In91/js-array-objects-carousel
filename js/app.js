@@ -28,31 +28,64 @@ const images = [
   },
 ];
 
+
+const mainImgTemplate = document.getElementById("carousel-main_img").content;
+const miniatureTemplate = document.getElementById("miniature_img").content;
+const mainDestination = document.querySelector(".col-9");
+const miniatureDestination = document.querySelector(".col-3");
+
 function carouselImages() {
   for (let i = 0; i < images.length; i++) {
     const element = images[i];
-
-    if (i === 0) {
-      document.querySelector(".col-9").innerHTML += 
-      `<img class="active" src="${element.image}" alt="${element.title}" />
-        <div class="image-text active">
-          <h3 class="title">${element.title}</h3>
-          <p class="text">${element.text}</p>
-        </div>`;
-
-      document.querySelector(".col-3").innerHTML = 
-      `<div class="row"><img src="${element.image}" alt="" /></div>`;
-    } else {
-      document.querySelector(".col-9").innerHTML += 
-      `<img class="hidden" src="${element.image}" alt="${element.title}" />
-        <div class="image-text hidden">
-          <h3 class="title">${element.title}</h3>
-          <p class="text">${element.text}</p>
-        </div>`;
-      document.querySelector(".col-3").innerHTML += 
-      `<div class="row inactive"><img src="${element.image}" alt="" /></div>`;
-    }
+    const mainImg = mainImgTemplate.cloneNode(true);
+    const miniatureImg = miniatureTemplate.cloneNode(true);
+    mainImg.querySelector("img").src = element.image;
+    mainImg.querySelector(".title").innerHTML = element.title;
+    mainImg.querySelector(".text").innerHTML = element.text;
+    miniatureImg.querySelector("img").src = element.image;
+    if (i !== 0) {
+      mainImg.querySelector("img").classList.add("hidden");
+      mainImg.querySelector(".image-text").classList.add("hidden");
+      miniatureImg.querySelector(".row").classList.add("inactive");
+    }    
+    mainDestination.append(mainImg);
+    miniatureDestination.append(miniatureImg);
   }
 }
 
 carouselImages();
+
+const mainImg = document.querySelectorAll(".col-9 img");
+const mainText = document.querySelectorAll(".image-text");
+const miniatureImg = document.querySelectorAll(".row");
+let activeNow = 0;
+// Pulsanti previous e next
+const nextBtn = document.querySelector(".next i");
+const prevBtn = document.querySelector(".previous i");
+// Event Listener su click
+nextBtn.addEventListener("click", function(){
+  mainImg[activeNow].classList.add("hidden");
+  mainText[activeNow].classList.add("hidden");
+  miniatureImg[activeNow].classList.add("inactive")
+  if (activeNow < images.length - 1) {
+      activeNow++;
+  } else {
+      activeNow = 0;
+  }  
+  mainImg[activeNow].classList.remove("hidden");
+  mainText[activeNow].classList.remove("hidden");
+  miniatureImg[activeNow].classList.remove("inactive")
+})
+prevBtn.addEventListener("click", function(){
+  mainImg[activeNow].classList.add("hidden");
+  mainText[activeNow].classList.add("hidden");
+  miniatureImg[activeNow].classList.add("inactive")
+  if (activeNow > 0){
+      activeNow--;
+  } else {
+      activeNow = images.length - 1;
+  }
+  mainImg[activeNow].classList.remove("hidden");
+  mainText[activeNow].classList.remove("hidden");
+  miniatureImg[activeNow].classList.remove("inactive")
+})

@@ -89,13 +89,14 @@ img {
 /* BUTTONS */
 .previous i,
 .next i {
-  background-color: rgba(189, 195, 199, 0.75);
+  background-color: rgba(189, 195, 199, 0.25);
   transition: background-color 0.1s;
   border-radius: 50%;
   padding: 6px;
   margin: 6px 0;
   font-size: 24px;
   position: absolute;
+  z-index: 10;
   left: 50%;
   transform: translate(-50%);
   cursor: pointer;
@@ -108,6 +109,6 @@ img {
 }
 .previous i:hover,
 .next i:hover {
-  background-color: rgba(189, 195, 199, 1);
+  background-color: rgba(189, 195, 199, .5);
 }
 

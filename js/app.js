@@ -51,6 +51,7 @@ function carouselImages(main_template, main_destination, miniature_template, min
 function addMiniatureListener(main_imgArray, main_textArray, miniature_imgArray) {
   for (let i = 0; i < images.length; i++) {
     miniature_imgArray[i].addEventListener("click", function(){
+      playlistTimeout();
       if(miniature_imgArray[i].classList.contains("inactive")) {
         main_imgArray[activeNow].classList.add("hidden");
         main_textArray[activeNow].classList.add("hidden");
@@ -105,6 +106,33 @@ const autoplay = setInterval(function() {
 autoplayList.push(autoplay);
 // Inizializzazione status autoplay
 let stopped = 0;
+function playlistTimeout() {
+  // Ferma autoplay su click
+  clearInterval(autoplayList[autoNow]);
+  // Controlla che timeout sia partito correttamente
+  if (stopped === 0) {
+    stopped = 1;
+  }
+  // Setta verso dell'autoplay
+  onward = true;
+  
+  if (stopped === 1) {
+    stopped = 2;
+    setTimeout(() => {
+      const autoplay = setInterval(function() {
+        if(onward) {
+          swapOnward(mainImg, mainText, miniatureImg);
+        } else {
+          swapBackward(mainImg, mainText, miniatureImg);
+        }
+      }, 3000);
+      autoplayList.push(autoplay);
+      autoNow++;
+      // Timeout partito correttamente
+      stopped = 0;
+    }, 9000);
+  }
+}
 
 // Template immagine grande + destinazione
 const mainImgTemplate = document.getElementById("carousel-main_img").content;
@@ -132,58 +160,10 @@ const prevBtn = document.querySelector(".previous i");
 // Event Listener su click
 nextBtn.addEventListener("click", function(){
   swapOnward(mainImg, mainText, miniatureImg);
-  // Ferma autoplay su click
-  clearInterval(autoplayList[autoNow]);
-  // Controlla che timeout sia partito correttamente
-  if (stopped === 0) {
-    stopped = 1;
-  }
-  // Setta verso dell'autoplay
-  onward = true;
-  
-  if (stopped === 1) {
-    stopped = 2;
-    setTimeout(() => {
-      const autoplay = setInterval(function() {
-        if(onward) {
-          swapOnward(mainImg, mainText, miniatureImg);
-        } else {
-          swapBackward(mainImg, mainText, miniatureImg);
-        }
-      }, 3000);
-      autoplayList.push(autoplay);
-      autoNow++;
-      // Timeout partito correttamente
-      stopped = 0;
-    }, 9000);
-  }
+  playlistTimeout();
 })
 prevBtn.addEventListener("click", function(){
   swapBackward(mainImg, mainText, miniatureImg);
-  // Ferma autoplay su click
-  clearInterval(autoplayList[autoNow]);
-  // Controlla che timeout sia partito correttamente
-  if (stopped === 0) {
-    stopped = 1;
-  }
-  // Setta verso dell'autoplay
-  onward = false;
-
-  if (stopped === 1) {
-    stopped = 2;
-    setTimeout(() => {
-      const autoplay = setInterval(function() {
-        if(onward) {
-          swapOnward(mainImg, mainText, miniatureImg);
-        } else {
-          swapBackward(mainImg, mainText, miniatureImg);
-        }
-      }, 3000);
-      autoplayList.push(autoplay);
-      autoNow++;
-      // Timeout partito correttamente
-      stopped = 0;
-    }, 9000);
-  }
+  playlistTimeout();
 })
 

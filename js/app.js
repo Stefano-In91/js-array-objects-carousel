@@ -34,40 +34,36 @@ function carouselImages(main_template, main_destination, miniature_template, min
     const element = images[i];
     const mainImgCreate = main_template.cloneNode(true);
     const miniatureImgCreate = miniature_template.cloneNode(true);
-    mainImgCreate.querySelector("img").src = element.image;
+    mainImgCreate.querySelector(".main-img").src = element.image;
     mainImgCreate.querySelector(".title").innerHTML = element.title;
     mainImgCreate.querySelector(".text").innerHTML = element.text;
     miniatureImgCreate.querySelector("img").src = element.image;
     if (i !== 0) {
-      mainImgCreate.querySelector("img").classList.add("hidden");
-      mainImgCreate.querySelector(".image-text").classList.add("hidden");
-      miniatureImgCreate.querySelector(".row").classList.add("inactive");
+      mainImgCreate.querySelector(".main-carousel").classList.add("hidden");
+      miniatureImgCreate.querySelector(".miniature-img").classList.add("inactive");
     }
     main_destination.append(mainImgCreate);
     miniature_destination.append(miniatureImgCreate);
   }
 }
 // Aggiunge listener su click delle miniature
-function addMiniatureListener(main_imgArray, main_textArray, miniature_imgArray) {
+function addMiniatureListener(main_imgArray, miniature_imgArray) {
   for (let i = 0; i < images.length; i++) {
     miniature_imgArray[i].addEventListener("click", function(){
       playlistTimeout();
       if(miniature_imgArray[i].classList.contains("inactive")) {
         main_imgArray[activeNow].classList.add("hidden");
-        main_textArray[activeNow].classList.add("hidden");
         miniature_imgArray[activeNow].classList.add("inactive")
         activeNow = i ;
         main_imgArray[activeNow].classList.remove("hidden");
-        main_textArray[activeNow].classList.remove("hidden");
         miniature_imgArray[activeNow].classList.remove("inactive")
       }
     })    
   }
 }
 //  Swap dell'attuale attivo col prossimo
-function swapOnward(main_imgArray, main_textArray, miniature_imgArray) {
+function swapOnward(main_imgArray, miniature_imgArray) {
   main_imgArray[activeNow].classList.add("hidden");
-  main_textArray[activeNow].classList.add("hidden");
   miniature_imgArray[activeNow].classList.add("inactive")
   if (activeNow < images.length - 1) {
     activeNow++;
@@ -75,13 +71,11 @@ function swapOnward(main_imgArray, main_textArray, miniature_imgArray) {
       activeNow = 0;
   }
   main_imgArray[activeNow].classList.remove("hidden");
-  main_textArray[activeNow].classList.remove("hidden");
   miniature_imgArray[activeNow].classList.remove("inactive")
 }
 // Swap dell'attuale attivo col precedente
-function swapBackward(main_imgArray, main_textArray, miniature_imgArray) {
+function swapBackward(main_imgArray, miniature_imgArray) {
   main_imgArray[activeNow].classList.add("hidden");
-  main_textArray[activeNow].classList.add("hidden");
   miniature_imgArray[activeNow].classList.add("inactive")
   if (activeNow > 0){
     activeNow--;
@@ -89,7 +83,6 @@ function swapBackward(main_imgArray, main_textArray, miniature_imgArray) {
     activeNow = images.length - 1;
   }
   main_imgArray[activeNow].classList.remove("hidden");
-  main_textArray[activeNow].classList.remove("hidden");
   miniature_imgArray[activeNow].classList.remove("inactive")
 }
 // Funzione autoplay
@@ -98,32 +91,31 @@ const autoplayList = [];
 let autoNow = 0;
 const autoplay = setInterval(function() {
   if(onward) {
-    swapOnward(mainImg, mainText, miniatureImg);
+    swapOnward(mainImg, miniatureImg);
   } else {
-    swapBackward(mainImg, mainText, miniatureImg);
+    swapBackward(mainImg, miniatureImg);
   }
 }, 3000);
 autoplayList.push(autoplay);
 // Inizializzazione status autoplay
 let stopped = 0;
+// Funzione timeout per autoplay
 function playlistTimeout() {
-  // Ferma autoplay su click
+  // Ferma autoplay
   clearInterval(autoplayList[autoNow]);
   // Controlla che timeout sia partito correttamente
   if (stopped === 0) {
     stopped = 1;
   }
-  // Setta verso dell'autoplay
-  onward = true;
-  
+  // Parte timeout se l'ultimo autoplay è partito e si è fermato correttamente
   if (stopped === 1) {
     stopped = 2;
     setTimeout(() => {
       const autoplay = setInterval(function() {
         if(onward) {
-          swapOnward(mainImg, mainText, miniatureImg);
+          swapOnward(mainImg, miniatureImg);
         } else {
-          swapBackward(mainImg, mainText, miniatureImg);
+          swapBackward(mainImg, miniatureImg);
         }
       }, 3000);
       autoplayList.push(autoplay);
@@ -144,26 +136,28 @@ const miniatureDestination = document.querySelector(".col-3");
 carouselImages(mainImgTemplate, mainDestination, miniatureTemplate, miniatureDestination);
 
 // Array immagini grandi e relativo testo
-const mainImg = document.querySelectorAll(".col-9 img");
-const mainText = document.querySelectorAll(".image-text");
+const mainImg = document.querySelectorAll(".main-carousel");
 // Array immagini piccole
-const miniatureImg = document.querySelectorAll(".row");
+const miniatureImg = document.querySelectorAll(".miniature-img");
 // Inizializzazione indice immagine attiva
 let activeNow = 0;
 
-addMiniatureListener(mainImg, mainText, miniatureImg);
-// autoplay(mainImg, mainText, miniatureImg);
+addMiniatureListener(mainImg, miniatureImg);
+// autoplay(mainImg, miniatureImg);
 
 // Pulsanti previous e next
 const nextBtn = document.querySelector(".next i");
 const prevBtn = document.querySelector(".previous i");
 // Event Listener su click
 nextBtn.addEventListener("click", function(){
-  swapOnward(mainImg, mainText, miniatureImg);
+  swapOnward(mainImg, miniatureImg);
+  // Setta verso dell'autoplay
+  onward = true;
   playlistTimeout();
 })
 prevBtn.addEventListener("click", function(){
-  swapBackward(mainImg, mainText, miniatureImg);
+  swapBackward(mainImg, miniatureImg);
+  // Setta verso dell'autoplay
+  onward = false;
   playlistTimeout();
 })
-

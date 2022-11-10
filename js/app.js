@@ -1,5 +1,8 @@
 "use strict";
 
+/*-----------
+  OBJECTS
+-----------*/
 const images = [
   {
     image: "img/01.webp",
@@ -28,16 +31,19 @@ const images = [
   },
 ];
 
+/*-----------
+  FUNCTIONS
+-----------*/
 //Riempie il carosello con le immagini dell'array
 function carouselImages(main_template, main_destination, miniature_template, miniature_destination) {
-  images.forEach((element, i) => {
+  images.forEach((object, index) => {
     const mainImgCreate = main_template.cloneNode(true);
     const miniatureImgCreate = miniature_template.cloneNode(true);
-    mainImgCreate.querySelector(".main-img").src = element.image;
-    mainImgCreate.querySelector(".title").innerHTML = element.title;
-    mainImgCreate.querySelector(".text").innerHTML = element.text;
-    miniatureImgCreate.querySelector("img").src = element.image;
-    if (i !== 0) {
+    mainImgCreate.querySelector(".main-img").src = object.image;
+    mainImgCreate.querySelector(".title").innerHTML = object.title;
+    mainImgCreate.querySelector(".text").innerHTML = object.text;
+    miniatureImgCreate.querySelector("img").src = object.image;
+    if (index !== 0) {
       mainImgCreate.querySelector(".main-carousel").classList.add("hidden");
       miniatureImgCreate.querySelector(".miniature-img").classList.add("inactive");
     }
@@ -47,7 +53,7 @@ function carouselImages(main_template, main_destination, miniature_template, min
 }
 // Aggiunge listener su click delle miniature
 function addMiniatureListener(main_imgArray, miniature_imgArray) {
-  for (let i = 0; i < images.length; i++) {
+  for (let i = 0; i < miniature_imgArray.length; i++) {
     miniature_imgArray[i].addEventListener("click", function(){
       playlistTimeout();
       if(miniature_imgArray[i].classList.contains("inactive")) {
@@ -125,6 +131,9 @@ function playlistTimeout() {
   }
 }
 
+/*-----------
+    MAIN
+-----------*/
 // Template immagine grande + destinazione
 const mainImgTemplate = document.getElementById("carousel-main_img").content;
 const mainDestination = document.querySelector(".col-9");

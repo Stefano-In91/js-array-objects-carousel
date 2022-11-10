@@ -93,13 +93,18 @@ function swapBackward(main_imgArray, main_textArray, miniature_imgArray) {
 }
 // Funzione autoplay
 let onward = true;
-var autoplay = setInterval(function() {
+const autoplayList = [];
+let autoNow = 0;
+const autoplay = setInterval(function() {
   if(onward) {
     swapOnward(mainImg, mainText, miniatureImg);
   } else {
     swapBackward(mainImg, mainText, miniatureImg);
   }
-}, 5000);
+}, 3000);
+autoplayList.push(autoplay);
+// Inizializzazione status autoplay
+let stopped = 0;
 
 // Template immagine grande + destinazione
 const mainImgTemplate = document.getElementById("carousel-main_img").content;
@@ -128,34 +133,57 @@ const prevBtn = document.querySelector(".previous i");
 nextBtn.addEventListener("click", function(){
   swapOnward(mainImg, mainText, miniatureImg);
   // Ferma autoplay su click
-  clearInterval(autoplay);
+  clearInterval(autoplayList[autoNow]);
+  // Controlla che timeout sia partito correttamente
+  if (stopped === 0) {
+    stopped = 1;
+  }
   // Setta verso dell'autoplay
   onward = true;
-  // Timeout prima che ricominci autoplay
-  const pausa = setTimeout(() => {
-    var autoplay = setInterval(function() {
-      if(onward) {
-        swapOnward(mainImg, mainText, miniatureImg);
-      } else {
-        swapBackward(mainImg, mainText, miniatureImg);
-      }
-    }, 5000);
-  }, 10000);
+  
+  if (stopped === 1) {
+    stopped = 2;
+    setTimeout(() => {
+      const autoplay = setInterval(function() {
+        if(onward) {
+          swapOnward(mainImg, mainText, miniatureImg);
+        } else {
+          swapBackward(mainImg, mainText, miniatureImg);
+        }
+      }, 3000);
+      autoplayList.push(autoplay);
+      autoNow++;
+      // Timeout partito correttamente
+      stopped = 0;
+    }, 9000);
+  }
 })
 prevBtn.addEventListener("click", function(){
   swapBackward(mainImg, mainText, miniatureImg);
   // Ferma autoplay su click
-  clearInterval(autoplay);
+  clearInterval(autoplayList[autoNow]);
+  // Controlla che timeout sia partito correttamente
+  if (stopped === 0) {
+    stopped = 1;
+  }
   // Setta verso dell'autoplay
   onward = false;
-  const pausa = setTimeout(() => {
-    var autoplay = setInterval(function() {
-      if(onward) {
-        swapOnward(mainImg, mainText, miniatureImg);
-      } else {
-        swapBackward(mainImg, mainText, miniatureImg);
-      }
-    }, 5000);
-  }, 10000);
+
+  if (stopped === 1) {
+    stopped = 2;
+    setTimeout(() => {
+      const autoplay = setInterval(function() {
+        if(onward) {
+          swapOnward(mainImg, mainText, miniatureImg);
+        } else {
+          swapBackward(mainImg, mainText, miniatureImg);
+        }
+      }, 3000);
+      autoplayList.push(autoplay);
+      autoNow++;
+      // Timeout partito correttamente
+      stopped = 0;
+    }, 9000);
+  }
 })
 

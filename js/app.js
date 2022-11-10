@@ -30,8 +30,7 @@ const images = [
 
 //Riempie il carosello con le immagini dell'array
 function carouselImages(main_template, main_destination, miniature_template, miniature_destination) {
-  for (let i = 0; i < images.length; i++) {
-    const element = images[i];
+  images.forEach((element, i) => {
     const mainImgCreate = main_template.cloneNode(true);
     const miniatureImgCreate = miniature_template.cloneNode(true);
     mainImgCreate.querySelector(".main-img").src = element.image;
@@ -44,7 +43,7 @@ function carouselImages(main_template, main_destination, miniature_template, min
     }
     main_destination.append(mainImgCreate);
     miniature_destination.append(miniatureImgCreate);
-  }
+  })
 }
 // Aggiunge listener su click delle miniature
 function addMiniatureListener(main_imgArray, miniature_imgArray) {
@@ -143,7 +142,6 @@ const miniatureImg = document.querySelectorAll(".miniature-img");
 let activeNow = 0;
 
 addMiniatureListener(mainImg, miniatureImg);
-// autoplay(mainImg, miniatureImg);
 
 // Pulsanti previous e next
 const nextBtn = document.querySelector(".next i");
